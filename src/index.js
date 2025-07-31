@@ -1,7 +1,7 @@
 //importaciones
 const express = require('express'); 
 const cors = require('cors');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 //creación del servidor 
@@ -25,18 +25,24 @@ const getConnection = async () => {
     });
 }
 
-//endpoint para obtener todos los personajes
+//endpoint para obtener todas los frases con sus personajes
 server.get('/personajes', async (req, res) => {
     try {
         const conn = await getConnection();
-        const [rows] = await conn.execute('SELECT * FROM personajes');
-        res.json(rows);
+        const [rows] = await conn.query('select * from frases');
+        
+        res.json({
+            info: {"count": rows.length},
+            result: rows  
+        });
+        
         await conn.end();
+        
     } catch (error) {
         console.error('Error al obtener personajes:', error);
-        res.status(500).json({ error: 'Error al obtener personajes' });
+        res.status(500).json({ error: 'Error al obtener las frases' });
     }
 })
 
-//escuchan el servidor 
+//escuchar el servidor 
 
