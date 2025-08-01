@@ -25,11 +25,12 @@ const getConnection = async () => {
     });
 }
 
+//escuchar el servidor 
 //endpoint para obtener todas los frases con sus personajes
-server.get('/personajes', async (req, res) => {
+server.get('/frases', async (req, res) => {
     try {
         const conn = await getConnection();
-        const [rows] = await conn.query('select * from frases');
+        const [rows] = await conn.query('select nombre, apellido, texto from frases left join personajes on frases.personaje_id = personajes.id order by nombre, texto');
         
         res.json({
             info: {"count": rows.length},
@@ -44,5 +45,5 @@ server.get('/personajes', async (req, res) => {
     }
 })
 
-//escuchar el servidor 
+
 
