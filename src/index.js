@@ -40,7 +40,7 @@ server.get('/frases', async (req, res) => {
         await conn.end();
         
     } catch (error) {
-        console.error('Error al obtener personajes:', error);
+        console.error('Error al obtener las frases:', error);
         res.status(500).json({ error: 'Error al obtener las frases' });
     }
 })
