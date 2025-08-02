@@ -65,4 +65,35 @@ server.get('/frases/:id', async (req, res) => {
   }
 });
 
+// Crear una nueva frase
+server.post('/frases', async (req, res) => {
+  const { texto, personaje_id } = req.body;
+  
+  if (!texto || !personaje_id) {
+    return res.status(400).json({
+      success: false,
+      message: 'Faltan campos obligatorios: texto o personaje_id'
+    });
+  }
+
+  try {
+    const connection = await getConnection();
+    const [result] = await connection.query(
+      'INSERT INTO frases (texto, personaje_id) VALUES (?, ?)',
+      [texto, personaje_id]
+    );
+    await connection.end();
+
+    res.status(201).json({
+      success: true,
+      id: result.insertId
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al crear la frase'
+    });
+  }
+});
+
 
