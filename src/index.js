@@ -170,7 +170,7 @@ server.get('/frases/personaje/:personaje_id', async (req, res) => {
     await connection.end();
 
     if (rows.length === 0) {
-      return res.status(404).json({ error: 'Frase no encontrada' });
+      return res.status(404).json({ error: 'Personaje no encontrado' });
     }
 
     res.json({
@@ -179,8 +179,46 @@ server.get('/frases/personaje/:personaje_id', async (req, res) => {
         });
 
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener la frase' });
+    res.status(500).json({ error: 'Error al obtener las frases del personaje' });
   }
 });
 
-//GET /personajes - Listar todos los personajes
+
+//Obtener todos los personajes
+server.get('/personajes', async (req, res) => {
+    try {
+        const conn = await getConnection();
+        const [rows] = await conn.query('select id, nombre, apellido, ocupacion, descripcion from personajes order by id');
+        
+        res.json({
+            info: {"count": rows.length},
+            result: rows  
+        });
+        
+        await conn.end();
+        
+    } catch (error) {
+        console.error('Error al obtener los personajes:', error);
+        res.status(500).json({ error: 'Error al obtener los personajes' });
+    }
+})
+
+//GET /capitulos - Listar todos los capítulos
+//Obtener todos los capítulos
+server.get('/capitulos', async (req, res) => {
+    try {
+        const conn = await getConnection();
+        const [rows] = await conn.query('select id, titulo, numero_episodio, temporada, fecha_emision, sinopsis from capitulos order by id');
+        
+        res.json({
+            info: {"count": rows.length},
+            result: rows  
+        });
+        
+        await conn.end();
+        
+    } catch (error) {
+        console.error('Error al obtener los capítulos:', error);
+        res.status(500).json({ error: 'Error al obtener los capítulos' });
+    }
+})
