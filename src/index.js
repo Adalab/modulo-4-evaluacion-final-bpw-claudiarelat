@@ -68,7 +68,7 @@ server.get('/frases/:id', async (req, res) => {
 // Crear una nueva frase
 server.post('/frases', async (req, res) => {
   const { texto, personaje_id } = req.body;
-  
+
   if (!texto || !personaje_id) {
     return res.status(400).json({
       success: false,
@@ -96,4 +96,38 @@ server.post('/frases', async (req, res) => {
   }
 });
 
+// Actualizar una frase existente
+server.put('/frases/:id', async (req, res) => {
+  const { id } = req.params;
+  const { texto, personaje_id } = req.body;
 
+  if (!texto || !personaje_id) {
+    return res.status(400).json({
+      success: false,
+      message: 'Faltan campos obligatorios: texto o personaje_id'
+    });
+  }
+
+  try {
+    const connection = await getConnection();
+    const [result] = await connection.execute(
+      'UPDATE frases SET texto = ?, personaje_id = ? WHERE id = ?',
+      [texto, personaje_id, id]
+    );
+    await connection.end();
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Frase no encontrada'
+      });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al actualizar la frase'
+    });
+  }
+});
