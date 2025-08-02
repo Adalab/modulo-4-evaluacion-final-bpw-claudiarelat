@@ -203,7 +203,6 @@ server.get('/personajes', async (req, res) => {
     }
 })
 
-//GET /capitulos - Listar todos los capítulos
 //Obtener todos los capítulos
 server.get('/capitulos', async (req, res) => {
     try {
