@@ -46,4 +46,23 @@ server.get('/frases', async (req, res) => {
 })
 
 
+// Obtener una frase por su ID
+server.get('/frases/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const connection = await getConnection();
+    const [rows] = await connection.query('select nombre, apellido, texto from frases left join personajes on frases.personaje_id = personajes.id WHERE frases.id = ?', [id]);
+    await connection.end();
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Frase no encontrada' });
+    }
+
+    res.json(rows[0]);
+
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener la frase' });
+  }
+});
+
 

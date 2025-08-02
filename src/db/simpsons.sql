@@ -1,7 +1,7 @@
-CREATE DATABASE simpsons; 
+CREATE DATABASE IF NOT EXISTS simpsons; 
 USE simpsons; 
 
-CREATE TABLE personajes (
+CREATE TABLE IF NOT EXISTS personajes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100),
@@ -10,7 +10,7 @@ CREATE TABLE personajes (
 );
 
 
-CREATE TABLE capitulos (
+CREATE TABLE IF NOT EXISTS capitulos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
     numero_episodio INT,
@@ -20,7 +20,7 @@ CREATE TABLE capitulos (
 );
 
 
-CREATE TABLE frases (
+CREATE TABLE IF NOT EXISTS frases (
     id INT AUTO_INCREMENT PRIMARY KEY,
     texto TEXT NOT NULL,
     marca_tiempo VARCHAR(10),  -- formato tipo '12:34'
@@ -32,7 +32,7 @@ CREATE TABLE frases (
 );
 
 -- Crear tabla intermedia para relación N:M entre personajes y capítulos
-CREATE TABLE personajes_capitulos (
+CREATE TABLE IF NOT EXISTS personajes_capitulos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     personaje_id INT,
     capitulo_id INT,
