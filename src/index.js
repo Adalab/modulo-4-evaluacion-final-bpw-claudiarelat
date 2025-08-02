@@ -30,7 +30,7 @@ const getConnection = async () => {
 server.get('/frases', async (req, res) => {
     try {
         const conn = await getConnection();
-        const [rows] = await conn.query('select frases.id, nombre, apellido, texto from frases left join personajes on frases.personaje_id = personajes.id order by frases.id');
+        const [rows] = await conn.query('select nombre, apellido, texto from frases left join personajes on frases.personaje_id = personajes.id order by nombre, texto');
         
         res.json({
             info: {"count": rows.length},
@@ -160,3 +160,27 @@ server.delete('/frases/:id', async (req, res) => {
     });
   }
 });
+
+//Obtener todas las frases de un personaje concreto 
+server.get('/frases/personaje/:personaje_id', async (req, res) => {
+  const { personaje_id } = req.params;
+  try {
+    const connection = await getConnection();
+    const [rows] = await connection.query('select id, texto from frases WHERE personaje_id = ?', [personaje_id]);
+    await connection.end();
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Frase no encontrada' });
+    }
+
+    res.json({
+            info: {"count": rows.length},
+            result: rows  
+        });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener la frase' });
+  }
+});
+
+//GET /personajes - Listar todos los personajes
